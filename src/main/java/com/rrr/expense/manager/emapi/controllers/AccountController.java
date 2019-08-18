@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,7 +29,7 @@ public class AccountController {
                 .service
                 .findAll()
                 .map(accountList -> ResponseEntity.ok().body(accountList))
-                .orElseThrow(() -> new RuntimeException("Accounts Not Found"));
+                .orElse(ResponseEntity.notFound().build());
     }
 
     @GetMapping(value = "/accounts/{accountId}")
@@ -37,15 +38,13 @@ public class AccountController {
                 .service
                 .findById(accountId)
                 .map(account -> ResponseEntity.ok().body(account))
-                .orElseThrow(
-                        () -> new RuntimeException("Account Id " + accountId + " Is Not Found")
-                );
+                .orElse(ResponseEntity.notFound().build());
     }
 
     @PostMapping(value = "/accounts")
     private ResponseEntity<Account> addAccount(@Valid @RequestBody Account account) {
         return ResponseEntity
-                .ok()
+                .created(URI.create("accounts/" + account.getId()))
                 .body(this
                         .service
                         .save(account));
@@ -54,7 +53,7 @@ public class AccountController {
     @PutMapping(value = "/accounts/{accountId}")
     private ResponseEntity<Account> updateAccount(@RequestBody Account account, @PathVariable Long accountId) {
         return ResponseEntity
-                .ok()
+                .accepted()
                 .body(this
                         .service
                         .update(account, accountId));
@@ -63,7 +62,7 @@ public class AccountController {
     @DeleteMapping(value = "/accounts/{accountId}")
     private ResponseEntity<Account> deleteAccount(@PathVariable Long accountId) {
         return ResponseEntity
-                .ok()
+                .accepted()
                 .body(this
                         .service
                         .delete(accountId));

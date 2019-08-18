@@ -9,6 +9,6 @@ public interface AccountsDao {
     Optional<List<Account>> findAll();
     Optional<Account> findById(Long id);
     boolean save(Account account);
-    boolean update(Account account, Long id);
+    void update(Account account, Account withAccount);
     boolean delete(Account account);
 }

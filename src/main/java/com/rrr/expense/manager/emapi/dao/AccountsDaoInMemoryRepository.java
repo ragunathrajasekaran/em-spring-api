@@ -28,20 +28,7 @@ public class AccountsDaoInMemoryRepository implements AccountsDao {
         return this.accounts.add(account);
     }
 
-    public boolean update(Account account, Long id) {
-        return this
-                .accounts
-                .stream()
-                .filter(account1 -> account1.getId().equals(id))
-                .findFirst()
-                .map(account1 -> {
-                    merge(account1, account);
-                    return true;
-                })
-                .orElse(false);
-    }
-
-    private void merge(Account account, Account withAccount) {
+    public void update(Account account, Account withAccount) {
         account.setTitle(withAccount.getTitle());
         account.setDescription(withAccount.getDescription());
     }
